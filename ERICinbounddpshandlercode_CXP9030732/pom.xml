@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ericsson.nms.mediation.component</groupId>
+        <artifactId>inbound-dps-handler-code</artifactId>
+        <version>2.4.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>ERICinbounddpshandlercode_CXP9030732</artifactId>
+    <packaging>${rpm.packaging}</packaging>
+
+    <name>[${project.parent.artifactId}] CXP module</name>
+
+
+    <properties>
+        <com.ericsson.oss.rpm.architecture>noarch</com.ericsson.oss.rpm.architecture>
+        <zip.artifact.name>com-CXP9030732.zip</zip.artifact.name>
+        <publish_artifact>true</publish_artifact>
+        <media.category>service</media.category>
+        <sonar.skip>true</sonar.skip>
+    </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>inbound-dps-handler-code-ear</artifactId>
+            <version>${project.version}</version>
+            <type>ear</type>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <configuration>
+                    <mappings>
+                        <mapping>
+                            <directory>${vm.install-path}</directory>
+                            <filemode>550</filemode>
+                            <username>${jboss-username} </username>
+                            <groupname>${jboss-groupname}</groupname>
+                            <directoryIncluded>false</directoryIncluded>
+                            <dependency>
+                                <includes>
+                                    <include>${project.groupId}:${project.parent.artifactId}-ear</include>
+                                </includes>
+                            </dependency>
+                        </mapping>
+                    </mappings>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

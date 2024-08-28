@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ericsson.nms</groupId>
+        <artifactId>integration</artifactId>
+        <version>15.2.0.40</version>
+    </parent>
+    <groupId>com.ericsson.nms.mediation.component</groupId>
+    <artifactId>inbound-dps-handler-code</artifactId>
+    <version>2.4.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>${project.artifactId}</name>
+
+    <modules>
+        <module>inbound-dps-handler-code-jar</module>
+        <module>inbound-dps-handler-code-ear</module>
+        <module>ERICinbounddpshandlercode_CXP9030732</module>
+        <module>inbound-dps-handler-testsuite</module>
+        <module>code-coverage-aggregate</module>
+    </modules>
+
+    <properties>
+        <!-- CPP CM Sync BOM -->
+        <version.cpp-cm-sync-bom>2.0.17</version.cpp-cm-sync-bom>
+
+        <!-- Note: Below versions must match the ISO referenced in the CPP CM Sync BOM used -->
+        <!-- === [ISO: 2.22.71 ] === -->
+        <!-- Modeling Plugin -->
+        <version.mdt>10.7.4</version.mdt> <!-- ERICmodeldeploymenttool_CXP9030616 -->
+
+        <!-- Logging -->
+        <version.slf4j>1.7.22</version.slf4j>
+        <!-- Test -->
+        <version.junit>4.12</version.junit>
+
+        <!-- Maven plugins -->
+        <version.maven-ejb-plugin>2.3</version.maven-ejb-plugin>
+        <version.ejb>3.1</version.ejb>
+        <version.ear>6</version.ear>
+        <!-- Surefire Plugin -->
+        <version.maven-surefire-plugin>2.22.2</version.maven-surefire-plugin>
+        <!-- JaCoCo -->
+        <version.jacoco>0.8.4</version.jacoco>
+        <!-- Checkstyle -->
+        <version.maven-checkstyle-plugin>3.0.0</version.maven-checkstyle-plugin>
+        <version.checkstyle-tool>6.11.2</version.checkstyle-tool>
+        <version.enm-checkstyle-module>1.1.103</version.enm-checkstyle-module>
+        <!-- Plugins -->
+        <version.maven-dependency-plugin>3.1.1</version.maven-dependency-plugin>
+        <version.versions-maven-plugin>2.7</version.versions-maven-plugin>
+
+        <!-- Sonar -->
+        <sonar.coverage.jacoco.xmlReportPaths>${maven.multiModuleProjectDirectory}/code-coverage-aggregate/target/coverage-reports/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Logging -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${version.slf4j}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Internal -->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>inbound-dps-handler-code-jar</artifactId>
+                <version>${project.version}</version>
+                <type>ejb</type>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>inbound-dps-handler-code-ear</artifactId>
+                <version>${project.version}</version>
+                <type>ear</type>
+            </dependency>
+            <!-- CPP CM Sync BOM -->
+            <dependency>
+                <groupId>com.ericsson.oss.mediation.cm</groupId>
+                <artifactId>cpp-cm-sync-bom</artifactId>
+                <version>${version.cpp-cm-sync-bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Test -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- JEE -->
+        <dependency>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-jakartaee-8.0</artifactId>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- MDT -->
+                <plugin>
+                    <groupId>com.ericsson.oss.itpf.modeling</groupId>
+                    <artifactId>model-deployment-jar</artifactId>
+                    <version>${version.mdt}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.ericsson.oss.itpf.modeling</groupId>
+                            <artifactId>default-mdt-plugins-jar</artifactId>
+                            <version>${version.mdt}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <!-- JaCoCo -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${version.jacoco}</version><!-- Override com.ericsson.nms:integration -->
+                </plugin>
+                <!-- Other Maven Plugins -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${version.maven-surefire-plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-ejb-plugin</artifactId>
+                    <version>${version.maven-ejb-plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${version.maven-dependency-plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${version.versions-maven-plugin}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${version.maven-checkstyle-plugin}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${version.checkstyle-tool}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.ericsson.cds</groupId>
+                        <artifactId>checkstyle-module</artifactId>
+                        <version>${version.enm-checkstyle-module}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <consoleOutput>true</consoleOutput>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <configLocation>/enm/checkstyle/checkstyle.xml</configLocation>
+                    <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+                    <violationSeverity>warning</violationSeverity>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <includeTestResources>false</includeTestResources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <failOnViolation>true</failOnViolation>
+                        </configuration>
+                        <id>check-style</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
